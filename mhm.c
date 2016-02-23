@@ -11,49 +11,6 @@
 #define MAX_CHAIN_LENGTH (8)
 
 
-// Hash a string
-uint32_t
-hm_hash_string(hm_map * map, char * key_string) {
-	uint32_t key = crc32buf(key_string, strlen(key_string));
-
-	// https://web.archive.org/web/20120903003157/http://www.cris.com/~Ttwang/tech/inthash.htm
-	key = ~key + (key << 15); // key = (key << 15) - key - 1;
-	key = key ^ (key >> 12);
-	key = key + (key << 2);
-	key = key ^ (key >> 4);
-	key = key * 2057; // key = (key + (key << 3)) + (key << 11);
-	key = key ^ (key >> 16);
-
-	return key % map->size;
-}
-
-
-// Find closest free hash
-int32_t
-hm_hash(hm_map * map, char * key_string) {
-	if (map->used >= (map->size / 2)) {
-		return HM_FULL;
-	}
-
-	int curr = (signed int) hm_hash_string(map, key_string);
-
-	for (int i = 0; i < MAX_CHAIN_LENGTH; i++) {
-		if (map->data[curr].in_use == false) {
-			return curr;
-		}
-
-		if (map->data[curr].in_use == true &&
-		    strcmp(map->data[curr].key, key_string) == 0) {
-			return curr;
-		}
-
-		curr = curr + 1 % (int32_t)(map->size);
-	}
-
-	return HM_FULL;
-}
-
-
 // Allocate new hashmap
 hm_map *
 hm_new() {
@@ -104,6 +61,49 @@ hm_double_size(hm_map * map) {
 
 	free(curr);
 	return HM_OK;
+}
+
+
+// Hash a string
+uint32_t
+hm_hash_string(hm_map * map, char * key_string) {
+	uint32_t key = crc32buf(key_string, strlen(key_string));
+
+	// https://web.archive.org/web/20120903003157/http://www.cris.com/~Ttwang/tech/inthash.htm
+	key = ~key + (key << 15); // key = (key << 15) - key - 1;
+	key = key ^ (key >> 12);
+	key = key + (key << 2);
+	key = key ^ (key >> 4);
+	key = key * 2057; // key = (key + (key << 3)) + (key << 11);
+	key = key ^ (key >> 16);
+
+	return key % map->size;
+}
+
+
+// Find closest free hash
+int32_t
+hm_hash(hm_map * map, char * key_string) {
+	if (map->used >= (map->size / 2)) {
+		return HM_FULL;
+	}
+
+	int curr = (signed int) hm_hash_string(map, key_string);
+
+	for (int i = 0; i < MAX_CHAIN_LENGTH; i++) {
+		if (map->data[curr].in_use == false) {
+			return curr;
+		}
+
+		if (map->data[curr].in_use == true &&
+		    strcmp(map->data[curr].key, key_string) == 0) {
+			return curr;
+		}
+
+		curr = curr + 1 % (int32_t)(map->size);
+	}
+
+	return HM_FULL;
 }
 
 
