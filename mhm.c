@@ -10,25 +10,19 @@
 #define INITIAL_SIZE (256)
 #define MAX_CHAIN_LENGTH (8)
 
-uint32_t mix_32_bit(uint32_t key);
-
-
-// https://web.archive.org/web/20120903003157/http://www.cris.com/~Ttwang/tech/inthash.htm
-inline uint32_t mix_32_bit(uint32_t key) {
-  key = ~key + (key << 15); // key = (key << 15) - key - 1;
-  key = key ^ (key >> 12);
-  key = key + (key << 2);
-  key = key ^ (key >> 4);
-  key = key * 2057; // key = (key + (key << 3)) + (key << 11);
-  key = key ^ (key >> 16);
-  return key;
-}
 
 // Hash a string
 uint32_t
 hm_hash_string(hm_map * map, char * key_string) {
 	uint32_t key = crc32buf(key_string, strlen(key_string));
-	key = mix_32_bit(key);
+
+	// https://web.archive.org/web/20120903003157/http://www.cris.com/~Ttwang/tech/inthash.htm
+	key = ~key + (key << 15); // key = (key << 15) - key - 1;
+	key = key ^ (key >> 12);
+	key = key + (key << 2);
+	key = key ^ (key >> 4);
+	key = key * 2057; // key = (key + (key << 3)) + (key << 11);
+	key = key ^ (key >> 16);
 
 	return key % map->size;
 }
