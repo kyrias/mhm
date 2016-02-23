@@ -1,3 +1,4 @@
+// https://web.archive.org/web/20061011040706/http://c.snippets.org/code/crc_32.c
 /* Crc - 32 BIT ANSI X3.66 CRC checksum files */
 
 #include <stdio.h>
