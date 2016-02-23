@@ -8,7 +8,8 @@ char * strnew(const char * string);
 
 char *
 strnew(const char * string) {
-	char * new = malloc(strlen(string));
+	size_t len = strlen(string);
+	char * new = malloc(len + 1);
 	strcpy(new, string);
 	return new;
 }
