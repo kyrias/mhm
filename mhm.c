@@ -32,6 +32,7 @@ hm_new() {
 }
 
 
+// Double the size of the map array
 int
 hm_double_size(hm_map * map) {
 	hm_element * temp = (hm_element *) calloc(map->size * 2, (sizeof (hm_element)));
