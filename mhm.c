@@ -14,12 +14,12 @@
 // Allocate new hashmap
 hm_map *
 hm_new() {
-	hm_map * map = (hm_map *) malloc(sizeof map);
+	hm_map * map = (hm_map *) malloc(sizeof *map);
 	if (!map) {
 		return NULL;
 	}
 
-	map->data = (hm_element *) calloc(INITIAL_SIZE, (sizeof map->data));
+	map->data = (hm_element *) calloc(INITIAL_SIZE, (sizeof *(map->data)));
 	if (!map->data) {
 		free(map);
 		return NULL;
