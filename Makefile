@@ -1,6 +1,6 @@
 CC = clang
 
-CFLAGS ?= -O0 -ggdb
+CFLAGS ?= -O0
 CFLAGS += -Isrc -std=c11 -ggdb -fstack-protector-all -Wl,-z,relro -Wl,-z,now
 CFLAGS += -Weverything -Wno-padded
 
