@@ -39,15 +39,12 @@ main(void) {
 
 	hm_find(map, "foo", value);
 	printf("%s\n", *value);
-	free(*value);
 
 	hm_find(map, "1", value);
 	printf("%s\n", *value);
-	free(*value);
 
 	hm_find(map, "2", value);
 	printf("%s\n", *value);
-	free(*value);
 
 	free(foo);
 	free(bar);
@@ -55,4 +52,6 @@ main(void) {
 	free(one);
 	free(two);
 	free(value);
+	free(map->data);
+	free(map);
 }
